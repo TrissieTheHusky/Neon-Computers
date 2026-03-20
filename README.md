@@ -1,21 +1,34 @@
 # Neon Roo Computers & Upgrades
 
-A polished Flask starter for a computer repair, PC upgrade, custom build, and tech support business.
+A production-ready Flask starter for a computer repair, PC upgrade, custom build, and tech support business.
 
-## Included
+## What changed in this build
+
+- Brighter, more customer-facing landing page
+- Improved navbar with your Neon Roo logo
+- Cleaner footer and stronger calls to action
+- Better accessibility and focus states
+- Environment-based production config
+- Gunicorn entrypoint and config
+- Dockerfile and Procfile
+- Reverse-proxy-safe Flask setup with `ProxyFix`
+- Custom 404 and 500 pages
+- Static asset structure ready for deployment
+
+## Included features
 
 - Public marketing pages: home, services, pricing, policies, contact
-- Client account registration and login
-- Service request intake form
+- Client registration and login
+- Service request intake
 - Client dashboard for orders, tickets, and billing
-- Support ticket intake with category, severity, device, operating system, and preferred contact method
+- Support ticket system with severity, category, support mode, and hourly billing
 - Ticket messaging thread
 - Billable time tracking for support work
-- Break-even and recommended quote logic for orders
+- Break-even and recommended quote logic for jobs
 - Admin dashboard for pricing, orders, tickets, and payments
-- Stripe Checkout payment request scaffold with webhook handler
+- Stripe Checkout scaffold with webhook handler
 
-## Quick start
+## Local development
 
 ```bash
 python -m venv .venv
@@ -29,7 +42,7 @@ python run.py
 
 Open:
 
-```bash
+```text
 http://127.0.0.1:5000
 ```
 
@@ -46,33 +59,67 @@ Demo login:
 
 Change that immediately.
 
+## Production run
+
+Set `.env` to production values, then run with Gunicorn:
+
+```bash
+cp .env.example .env
+# edit the values first
+
+gunicorn -c gunicorn.conf.py wsgi:app
+```
+
+Recommended:
+
+- Put Gunicorn behind Nginx or Caddy
+- Use PostgreSQL instead of SQLite
+- Use HTTPS only
+- Rotate a strong `SECRET_KEY`
+- Set real Stripe keys and webhook secret
+
+## Nginx
+
+A sample config is included at:
+
+```text
+deploy/nginx/neon_roo_computers.conf
+```
+
+## Docker
+
+```bash
+docker build -t neon-roo-computers .
+docker run --env-file .env -p 8000:8000 neon-roo-computers
+```
+
 ## Stripe setup
 
 Add these to `.env`:
 
 ```env
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PUBLIC_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_live_or_test_...
+STRIPE_PUBLIC_KEY=pk_live_or_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
-BASE_URL=https://your-domain.example
+BASE_URL=https://computers.neonroo.xyz
 ```
 
-Then register a webhook endpoint pointing to:
+Webhook endpoint:
 
 ```text
-https://your-domain.example/billing/webhook
+https://computers.neonroo.xyz/billing/webhook
 ```
 
 Recommended event:
 
 - `checkout.session.completed`
 
-## Production cleanup
+## Still recommended before taking real customers
 
-- Move from SQLite to PostgreSQL
-- Put the app behind HTTPS
-- Add email notifications
-- Add file uploads for photos, invoices, and intake documents
-- Add role-based audit logs
+- Move to PostgreSQL
+- Add CSRF protection across forms
 - Add password reset and email verification
-- Replace placeholder contact details and policies
+- Add email notifications for ticket replies and status changes
+- Add file uploads for intake photos and invoices
+- Add audit logs for admin actions
+- Review all policies with a lawyer for your jurisdiction

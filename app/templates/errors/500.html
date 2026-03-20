@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Something went wrong | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<section class="page-shell text-center py-5">
+  <div class="content-card p-5 mx-auto" style="max-width: 700px;">
+    <span class="eyebrow">Server error</span>
+    <h1 class="display-6 fw-bold mt-3">Something went wrong on our side.</h1>
+    <p class="text-secondary mb-4">Please try again in a moment. If the issue continues, contact Neon Roo Computers & Upgrades.</p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a class="btn btn-neon" href="{{ url_for('main.index') }}">Go home</a>
+      <a class="btn btn-outline-primary-soft" href="{{ url_for('main.contact') }}">Contact</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

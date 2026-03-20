@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Page not found | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<section class="page-shell text-center py-5">
+  <div class="content-card p-5 mx-auto" style="max-width: 700px;">
+    <span class="eyebrow">404</span>
+    <h1 class="display-6 fw-bold mt-3">That page could not be found.</h1>
+    <p class="text-secondary mb-4">The page may have moved, the link may be broken, or the address may be incorrect.</p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a class="btn btn-neon" href="{{ url_for('main.index') }}">Back to home</a>
+      <a class="btn btn-outline-primary-soft" href="{{ url_for('main.contact') }}">Contact</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

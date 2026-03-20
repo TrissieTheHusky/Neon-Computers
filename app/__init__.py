@@ -1,11 +1,14 @@
 import os
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+from .config import CONFIG_MAP, DevelopmentConfig
 
 load_dotenv()
 
@@ -20,15 +23,17 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     os.makedirs(app.instance_path, exist_ok=True)
 
-    app.config.update(
-        SECRET_KEY=os.getenv('SECRET_KEY', 'dev-secret-change-me'),
-        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL', 'sqlite:///neon_roo_computers.db'),
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        COMPANY_NAME=os.getenv('COMPANY_NAME', 'Neon Roo Computers & Upgrades'),
-        BASE_URL=os.getenv('BASE_URL', 'http://127.0.0.1:5000').rstrip('/'),
-        STRIPE_SECRET_KEY=os.getenv('STRIPE_SECRET_KEY', ''),
-        STRIPE_WEBHOOK_SECRET=os.getenv('STRIPE_WEBHOOK_SECRET', ''),
-        STRIPE_PUBLIC_KEY=os.getenv('STRIPE_PUBLIC_KEY', ''),
+    config_name = os.getenv('FLASK_ENV', os.getenv('APP_ENV', 'development')).lower()
+    config_class = CONFIG_MAP.get(config_name, DevelopmentConfig)
+    app.config.from_object(config_class)
+
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_for=int(os.getenv('PROXY_FIX_X_FOR', '1')),
+        x_proto=int(os.getenv('PROXY_FIX_X_PROTO', '1')),
+        x_host=int(os.getenv('PROXY_FIX_X_HOST', '1')),
+        x_port=int(os.getenv('PROXY_FIX_X_PORT', '1')),
+        x_prefix=int(os.getenv('PROXY_FIX_X_PREFIX', '1')),
     )
 
     db.init_app(app)
@@ -48,7 +53,17 @@ def create_app():
             'now': datetime.now(UTC),
             'company_settings': settings,
             'stripe_public_key': app.config.get('STRIPE_PUBLIC_KEY', ''),
+            'app_env': app.config.get('ENV_NAME', 'development'),
         }
+
+    @app.errorhandler(404)
+    def not_found(_error):
+        return render_template('errors/404.html'), 404
+
+    @app.errorhandler(500)
+    def internal_error(_error):
+        db.session.rollback()
+        return render_template('errors/500.html'), 500
 
     from .routes.auth import auth_bp
     from .routes.main import main_bp
