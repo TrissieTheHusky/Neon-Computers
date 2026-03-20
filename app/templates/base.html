@@ -1,70 +1,122 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ company_settings.business_name if company_settings else 'Neon Roo Computers & Upgrades' }}{% endblock %}</title>
-  <meta name="description" content="Computer repair, upgrades, custom builds, diagnostics, remote support, and client portal access.">
+  <title>{% block title %}{{ company_settings.business_name if company_settings else 'Neon Roo Computers & Upgrades'
+    }}{% endblock %}</title>
+  <meta name="description"
+    content="Neon Roo Computers & Upgrades offers computer repair, custom builds, upgrades, diagnostics, remote support, and a client portal for order tracking and support.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  {% block head %}{% endblock %}
 </head>
-<body>
-  <nav class="navbar navbar-expand-lg site-nav border-bottom border-secondary-subtle">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="{{ url_for('main.index') }}">Neon Roo <span>Computers & Upgrades</span></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.services') }}">Services</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.pricing') }}">Pricing</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.policies') }}">Policies</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.contact') }}">Contact</a></li>
-          {% if current_user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('client.dashboard') }}">Dashboard</a></li>
-            {% if current_user.is_admin %}<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin</a></li>{% endif %}
-            <li class="nav-item"><a class="btn btn-neon" href="{{ url_for('main.request_service') }}">Request Service</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
-          {% else %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
-            <li class="nav-item"><a class="btn btn-neon" href="{{ url_for('auth.register') }}">Create Account</a></li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
 
-  <main class="py-4 py-lg-5">
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header>
+    <nav class="navbar navbar-expand-lg site-nav border-bottom border-secondary-subtle" aria-label="Primary navigation">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('main.index') }}"
+          aria-label="Neon Roo Computers and Upgrades home">
+          Neon Roo <span>Computers &amp; Upgrades</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+          aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+            <li class="nav-item"><a class="nav-link {% if request.endpoint == 'main.services' %}active{% endif %}"
+                href="{{ url_for('main.services') }}" {% if request.endpoint=='main.services' %}aria-current="page" {%
+                endif %}>Services</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.endpoint == 'main.pricing' %}active{% endif %}"
+                href="{{ url_for('main.pricing') }}" {% if request.endpoint=='main.pricing' %}aria-current="page" {%
+                endif %}>Pricing</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.endpoint == 'main.policies' %}active{% endif %}"
+                href="{{ url_for('main.policies') }}" {% if request.endpoint=='main.policies' %}aria-current="page" {%
+                endif %}>Policies</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.endpoint == 'main.contact' %}active{% endif %}"
+                href="{{ url_for('main.contact') }}" {% if request.endpoint=='main.contact' %}aria-current="page" {%
+                endif %}>Contact</a></li>
+            {% if current_user.is_authenticated %}
+            <li class="nav-item"><a
+                class="nav-link {% if request.endpoint and request.endpoint.startswith('client.') %}active{% endif %}"
+                href="{{ url_for('client.dashboard') }}" {% if request.endpoint and
+                request.endpoint.startswith('client.') %}aria-current="page" {% endif %}>Dashboard</a></li>
+            {% if current_user.is_admin %}
+            <li class="nav-item"><a
+                class="nav-link {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}"
+                href="{{ url_for('admin.dashboard') }}" {% if request.endpoint and request.endpoint.startswith('admin.')
+                %}aria-current="page" {% endif %}>Admin</a></li>
+            {% endif %}
+            <li class="nav-item"><a class="btn btn-neon" href="{{ url_for('main.request_service') }}">Request
+                service</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
+            {% else %}
+            <li class="nav-item"><a class="nav-link {% if request.endpoint == 'auth.login' %}active{% endif %}"
+                href="{{ url_for('auth.login') }}" {% if request.endpoint=='auth.login' %}aria-current="page" {% endif
+                %}>Login</a></li>
+            <li class="nav-item"><a class="btn btn-neon" href="{{ url_for('auth.register') }}">Create account</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" class="py-4 py-lg-5" tabindex="-1">
     <div class="container">
       {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div class="mb-4">
-            {% for category, message in messages %}
-              <div class="alert alert-{{ 'danger' if category == 'error' else category }} shadow-sm">{{ message }}</div>
-            {% endfor %}
-          </div>
-        {% endif %}
+      {% if messages %}
+      <div class="mb-4" aria-live="polite" aria-atomic="true">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else category }} shadow-sm" role="alert">{{ message
+          }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
       {% endwith %}
       {% block content %}{% endblock %}
     </div>
   </main>
 
   <footer class="footer border-top border-secondary-subtle py-5 mt-5">
-    <div class="container d-flex flex-column flex-lg-row justify-content-between gap-4">
-      <div>
-        <h5 class="mb-2">Neon Roo Computers & Upgrades</h5>
-        <p class="text-secondary mb-0">Repair, upgrade, custom PC build, diagnostics, and client support portal.</p>
-      </div>
-      <div class="small text-secondary">
-        <div><a href="{{ url_for('main.policies') }}">Policies</a></div>
+    <div class="container footer-grid">
+      <section aria-labelledby="footer-brand">
+        <h2 id="footer-brand" class="h5 mb-2">Neon Roo Computers &amp; Upgrades</h2>
+        <p class="text-secondary mb-0">Computer repair, upgrades, custom PC builds, diagnostics, and client support with
+          clear communication from intake to completion.</p>
+      </section>
+
+      <nav aria-label="Footer links" class="small text-secondary">
+        <div><a href="{{ url_for('main.services') }}">Services</a></div>
         <div><a href="{{ url_for('main.pricing') }}">Pricing</a></div>
+        <div><a href="{{ url_for('main.policies') }}">Policies</a></div>
         <div><a href="{{ url_for('main.contact') }}">Contact</a></div>
-      </div>
+      </nav>
+
+      <section aria-labelledby="footer-cta">
+        <h2 id="footer-cta" class="h6 mb-2">Need help now?</h2>
+        <p class="text-secondary small mb-3">Log in to track your order, open a support request, or message about an
+          existing repair.</p>
+        <div class="d-flex flex-wrap gap-2">
+          {% if current_user.is_authenticated %}
+          <a class="btn btn-neon btn-sm" href="{{ url_for('client.dashboard') }}">Open dashboard</a>
+          {% else %}
+          <a class="btn btn-neon btn-sm" href="{{ url_for('auth.register') }}">Create account</a>
+          {% endif %}
+        </div>
+      </section>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

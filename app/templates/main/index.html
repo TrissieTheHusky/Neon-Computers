@@ -1,41 +1,145 @@
 {% extends 'base.html' %}
+{% block title %}Computer Repair, Upgrades & Custom Builds | Neon Roo Computers & Upgrades{% endblock %}
 {% block content %}
 <section class="hero card-glass p-4 p-lg-5 mb-5">
-  <div class="row align-items-center g-4">
+  <div class="row align-items-center g-4 g-xl-5">
     <div class="col-lg-7">
-      <span class="eyebrow">Repair. Upgrade. Build.</span>
-      <h1 class="display-5 fw-bold mt-3 mb-3">Professional computer repair and custom build intake with a real client portal.</h1>
-      <p class="lead text-secondary">Neon Roo Computers & Upgrades gives your customers a polished storefront, order tracking, support messaging, hourly tech support intake, and online payment flow scaffolding.</p>
+      <span class="eyebrow">Local service. Clear communication. Fair pricing.</span>
+      <h1 class="display-5 fw-bold mt-3 mb-3">Computer repair, upgrades, and custom PC builds without the guesswork.
+      </h1>
+      <p class="lead text-secondary mb-4">Neon Roo Computers &amp; Upgrades helps you fix slow or broken systems,
+        install new parts, build gaming or workstation PCs, and get remote tech support with a client dashboard that
+        keeps you updated.</p>
+
+      <div class="hero-checks mb-4" aria-label="Highlights">
+        <span>Order status tracking</span>
+        <span>Client messaging</span>
+        <span>Hourly support available</span>
+        <span>Custom build intake</span>
+      </div>
+
       <div class="d-flex flex-wrap gap-3 mt-4">
-        <a class="btn btn-neon btn-lg" href="{{ url_for('main.request_service') if current_user.is_authenticated else url_for('auth.register') }}">Start a request</a>
-        <a class="btn btn-outline-light btn-lg" href="{{ url_for('main.pricing') }}">View pricing</a>
+        <a class="btn btn-neon btn-lg"
+          href="{{ url_for('main.request_service') if current_user.is_authenticated else url_for('auth.register') }}">Request
+          service</a>
+        <a class="btn btn-outline-light btn-lg" href="{{ url_for('main.pricing') }}">See pricing</a>
+      </div>
+      <p class="small text-secondary mt-3 mb-0">Have an existing repair or support question? {% if
+        current_user.is_authenticated %}<a class="link-underline" href="{{ url_for('client.dashboard') }}">Open your
+          dashboard</a>.{% else %}<a class="link-underline" href="{{ url_for('auth.login') }}">Log in</a> or <a
+          class="link-underline" href="{{ url_for('auth.register') }}">create an account</a>.{% endif %}</p>
+    </div>
+
+    <div class="col-lg-5">
+      <aside class="card-glass hero-panel p-4" aria-labelledby="hero-panel-title">
+        <h2 id="hero-panel-title" class="h4 mb-3">At-a-glance pricing</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">${{ '%.0f'|format(settings.diagnostic_fee) }}</div>
+            <div class="text-secondary">diagnostic fee</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${{ '%.0f'|format(settings.remote_support_hourly_rate) }}/hr</div>
+            <div class="text-secondary">remote support</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">{{ settings.target_margin_percent|int }}%</div>
+            <div class="text-secondary">target margin</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">Client portal</div>
+            <div class="text-secondary">status updates and messaging</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="mb-5" aria-labelledby="services-overview-title">
+  <div class="section-heading mb-4">
+    <h2 id="services-overview-title" class="mb-2">What clients can use this site for</h2>
+    <p class="text-secondary mb-0">Keep the homepage focused on common needs so visitors immediately understand what you
+      do.</p>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-6 col-xl-3">
+      <div class="feature-card h-100">
+        <h3 class="h5">Computer repair</h3>
+        <p class="mb-0">Troubleshoot boot issues, crashes, overheating, storage problems, malware cleanup, and other
+          hardware or software faults.</p>
       </div>
     </div>
-    <div class="col-lg-5">
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-number">${{ '%.0f'|format(settings.diagnostic_fee) }}</div><div class="text-secondary">diagnostic fee</div></div>
-        <div class="stat-card"><div class="stat-number">${{ '%.0f'|format(settings.remote_support_hourly_rate) }}/hr</div><div class="text-secondary">remote support</div></div>
-        <div class="stat-card"><div class="stat-number">{{ settings.target_margin_percent|int }}%</div><div class="text-secondary">target margin</div></div>
-        <div class="stat-card"><div class="stat-number">Portal</div><div class="text-secondary">status tracking & messaging</div></div>
+    <div class="col-md-6 col-xl-3">
+      <div class="feature-card h-100">
+        <h3 class="h5">Upgrades</h3>
+        <p class="mb-0">Install SSDs, RAM, GPUs, power supplies, cooling, and other performance or reliability
+          improvements.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+      <div class="feature-card h-100">
+        <h3 class="h5">Custom PC builds</h3>
+        <p class="mb-0">Collect budget, use case, and part preferences for gaming, streaming, school, office, or creator
+          systems.</p>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+      <div class="feature-card h-100">
+        <h3 class="h5">Tech support</h3>
+        <p class="mb-0">Clients can open support requests, describe the issue, set severity, and keep a written message
+          history in one place.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="row g-4 mb-5">
-  <div class="col-md-4"><div class="feature-card"><h3>Repair intake</h3><p>Collect device details, budget, serial number, symptoms, and service priority without juggling DMs.</p></div></div>
-  <div class="col-md-4"><div class="feature-card"><h3>Client dashboard</h3><p>Customers can log in to view order status, support tickets, billing requests, and message history.</p></div></div>
-  <div class="col-md-4"><div class="feature-card"><h3>Break-even pricing</h3><p>Quote against labor, parts, and target margin so you stop underpricing repairs and custom builds.</p></div></div>
+<section class="card-glass p-4 p-lg-5 mb-5" aria-labelledby="how-it-works-title">
+  <div class="section-heading mb-4">
+    <h2 id="how-it-works-title" class="mb-2">How the process works</h2>
+    <p class="text-secondary mb-0">This section makes the business feel easier to trust because visitors can see the
+      workflow up front.</p>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="step-card h-100">
+        <span class="step-number">1</span>
+        <h3 class="h5">Submit a request</h3>
+        <p class="mb-0">Choose repair, upgrade, custom build, or support and provide the device details and symptoms.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="step-card h-100">
+        <span class="step-number">2</span>
+        <h3 class="h5">Review and updates</h3>
+        <p class="mb-0">You review the request, quote the work, and update the order status through the client
+          dashboard.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="step-card h-100">
+        <span class="step-number">3</span>
+        <h3 class="h5">Track and communicate</h3>
+        <p class="mb-0">Clients can check progress, send messages, and see ticket or payment activity without needing to
+          chase replies.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="card-glass p-4 p-lg-5">
+<section class="card-glass p-4 p-lg-5" aria-labelledby="cta-title">
   <div class="row g-4 align-items-center">
     <div class="col-lg-8">
-      <h2 class="mb-3">Built for small shop workflow</h2>
-      <p class="text-secondary mb-0">Use it as a static-looking marketing site with Flask-backed login, service requests, ticket conversations, admin status management, time tracking, and payment requests.</p>
+      <h2 id="cta-title" class="mb-3">Ready to bring in more organized repair and support work?</h2>
+      <p class="text-secondary mb-0">Use the intake form for new jobs, the dashboard for existing orders, and the
+        support system for hourly tech help.</p>
     </div>
-    <div class="col-lg-4 text-lg-end">
-      <a class="btn btn-neon" href="{{ url_for('client.new_ticket') if current_user.is_authenticated else url_for('auth.register') }}">Open support ticket</a>
+    <div class="col-lg-4 text-lg-end d-flex flex-wrap gap-2 justify-content-lg-end">
+      <a class="btn btn-neon"
+        href="{{ url_for('main.request_service') if current_user.is_authenticated else url_for('auth.register') }}">Start
+        a request</a>
+      <a class="btn btn-outline-light" href="{{ url_for('main.contact') }}">Contact</a>
     </div>
   </div>
 </section>
