@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero card-glass p-4 p-lg-5 mb-5">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-7">
+      <span class="eyebrow">Repair. Upgrade. Build.</span>
+      <h1 class="display-5 fw-bold mt-3 mb-3">Professional computer repair and custom build intake with a real client portal.</h1>
+      <p class="lead text-secondary">Neon Roo Computers & Upgrades gives your customers a polished storefront, order tracking, support messaging, hourly tech support intake, and online payment flow scaffolding.</p>
+      <div class="d-flex flex-wrap gap-3 mt-4">
+        <a class="btn btn-neon btn-lg" href="{{ url_for('main.request_service') if current_user.is_authenticated else url_for('auth.register') }}">Start a request</a>
+        <a class="btn btn-outline-light btn-lg" href="{{ url_for('main.pricing') }}">View pricing</a>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">${{ '%.0f'|format(settings.diagnostic_fee) }}</div><div class="text-secondary">diagnostic fee</div></div>
+        <div class="stat-card"><div class="stat-number">${{ '%.0f'|format(settings.remote_support_hourly_rate) }}/hr</div><div class="text-secondary">remote support</div></div>
+        <div class="stat-card"><div class="stat-number">{{ settings.target_margin_percent|int }}%</div><div class="text-secondary">target margin</div></div>
+        <div class="stat-card"><div class="stat-number">Portal</div><div class="text-secondary">status tracking & messaging</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="row g-4 mb-5">
+  <div class="col-md-4"><div class="feature-card"><h3>Repair intake</h3><p>Collect device details, budget, serial number, symptoms, and service priority without juggling DMs.</p></div></div>
+  <div class="col-md-4"><div class="feature-card"><h3>Client dashboard</h3><p>Customers can log in to view order status, support tickets, billing requests, and message history.</p></div></div>
+  <div class="col-md-4"><div class="feature-card"><h3>Break-even pricing</h3><p>Quote against labor, parts, and target margin so you stop underpricing repairs and custom builds.</p></div></div>
+</section>
+
+<section class="card-glass p-4 p-lg-5">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-8">
+      <h2 class="mb-3">Built for small shop workflow</h2>
+      <p class="text-secondary mb-0">Use it as a static-looking marketing site with Flask-backed login, service requests, ticket conversations, admin status management, time tracking, and payment requests.</p>
+    </div>
+    <div class="col-lg-4 text-lg-end">
+      <a class="btn btn-neon" href="{{ url_for('client.new_ticket') if current_user.is_authenticated else url_for('auth.register') }}">Open support ticket</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

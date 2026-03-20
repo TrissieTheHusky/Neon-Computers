@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Payment {{ payment.public_id }} | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="page-head mb-4"><h1>Payment request {{ payment.public_id }}</h1><p class="text-secondary mb-0">{{ payment.description }}</p></div>
+<div class="card-glass p-4">
+  <div class="row g-3 mb-3">
+    <div class="col-md-3"><strong>Amount</strong><div>${{ '%.2f'|format(payment.amount) }}</div></div>
+    <div class="col-md-3"><strong>Status</strong><div>{{ payment.status }}</div></div>
+    <div class="col-md-3"><strong>Due date</strong><div>{{ payment.due_date.strftime('%Y-%m-%d') if payment.due_date else '—' }}</div></div>
+    <div class="col-md-3"><strong>Currency</strong><div>{{ payment.currency|upper }}</div></div>
+  </div>
+  {% if payment.status != 'paid' and stripe_enabled %}
+    <form method="post" action="{{ url_for('billing.create_checkout', payment_id=payment.id) }}">
+      <button class="btn btn-neon">Pay online with Stripe Checkout</button>
+    </form>
+  {% elif payment.status == 'paid' %}
+    <div class="alert alert-success mb-0">This payment request has been paid.</div>
+  {% else %}
+    <div class="alert alert-warning mb-0">Stripe is not configured yet. Use manual payment handling or enable Stripe in the environment file.</div>
+  {% endif %}
+</div>
+{% endblock %}

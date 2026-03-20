@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}New Support Ticket | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="page-head mb-4"><h1>Request tech support</h1><p class="text-secondary mb-0">Tell the portal what is happening, how severe it is, and how you want help.</p></div>
+<div class="card-glass p-4">
+  <form method="post" class="row g-3">
+    <div class="col-md-6"><label class="form-label">Subject</label><input type="text" name="subject" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label">Category</label><select name="category" class="form-select"><option>Hardware issue</option><option>Software issue</option><option>Virus / malware</option><option>Performance issue</option><option>Build advice</option><option>Network / internet</option></select></div>
+    <div class="col-md-3"><label class="form-label">Severity</label><select name="severity" class="form-select"><option>Standard</option><option>High</option><option>Emergency</option></select></div>
+    <div class="col-md-4"><label class="form-label">Support mode</label><select name="support_mode" class="form-select"><option>Remote</option><option>On-site</option><option>Drop-off</option></select></div>
+    <div class="col-md-4"><label class="form-label">Device type</label><input type="text" name="device_type" class="form-control" placeholder="Desktop, laptop, server, etc."></div>
+    <div class="col-md-4"><label class="form-label">Operating system</label><input type="text" name="operating_system" class="form-control" placeholder="Windows 11, Linux, macOS"></div>
+    <div class="col-md-4"><label class="form-label">Preferred contact</label><select name="preferred_contact" class="form-select"><option>Portal</option><option>Phone</option><option>Email</option></select></div>
+    <div class="col-md-8"><label class="form-label">Issue summary</label><input type="text" name="issue_summary" class="form-control" required></div>
+    <div class="col-12"><label class="form-label">What happened?</label><textarea name="what_happened" rows="5" class="form-control" required></textarea></div>
+    <div class="col-12"><label class="form-label">What have you already tried?</label><textarea name="troubleshooting_done" rows="4" class="form-control"></textarea></div>
+    <div class="col-12 text-secondary small">Remote support starts at ${{ '%.2f'|format(settings.remote_support_hourly_rate) }}/hr, standard advanced support at ${{ '%.2f'|format(settings.support_hourly_rate) }}/hr, and emergency support at ${{ '%.2f'|format(settings.emergency_support_hourly_rate) }}/hr.</div>
+    <div class="col-12"><button class="btn btn-neon">Create ticket</button></div>
+  </form>
+</div>
+{% endblock %}

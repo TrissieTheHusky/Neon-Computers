@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="page-head mb-4"><h1>Client dashboard</h1><p class="text-secondary mb-0">Track orders, support tickets, and open payment requests.</p></div>
+<div class="row g-4 mb-4">
+  <div class="col-md-4"><div class="stat-card"><div class="stat-number">{{ orders|length }}</div><div class="text-secondary">orders</div></div></div>
+  <div class="col-md-4"><div class="stat-card"><div class="stat-number">{{ tickets|length }}</div><div class="text-secondary">support tickets</div></div></div>
+  <div class="col-md-4"><div class="stat-card"><div class="stat-number">{{ payments|selectattr('status', 'equalto', 'open')|list|length }}</div><div class="text-secondary">open payment requests</div></div></div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card-glass p-4 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3"><h3 class="h5 mb-0">Orders</h3><a href="{{ url_for('main.request_service') }}" class="btn btn-sm btn-neon">New request</a></div>
+      {% if orders %}
+        <div class="list-group list-group-flush">
+          {% for order in orders %}
+            <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary-subtle" href="{{ url_for('client.order_detail', order_id=order.id) }}">
+              <div class="d-flex justify-content-between"><strong>{{ order.public_id }}</strong><span class="badge text-bg-secondary">{{ order.status }}</span></div>
+              <div>{{ order.title }}</div>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}<p class="text-secondary mb-0">No orders yet.</p>{% endif %}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card-glass p-4 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3"><h3 class="h5 mb-0">Support tickets</h3><a href="{{ url_for('client.new_ticket') }}" class="btn btn-sm btn-neon">New ticket</a></div>
+      {% if tickets %}
+        <div class="list-group list-group-flush">
+          {% for ticket in tickets %}
+            <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary-subtle" href="{{ url_for('client.ticket_detail', ticket_id=ticket.id) }}">
+              <div class="d-flex justify-content-between"><strong>{{ ticket.public_id }}</strong><span class="badge text-bg-secondary">{{ ticket.status }}</span></div>
+              <div>{{ ticket.subject }}</div>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}<p class="text-secondary mb-0">No tickets yet.</p>{% endif %}
+    </div>
+  </div>
+</div>
+<div class="card-glass p-4 mt-4">
+  <h3 class="h5 mb-3">Billing</h3>
+  {% if payments %}
+  <div class="table-responsive">
+    <table class="table table-dark table-borderless align-middle">
+      <thead><tr><th>ID</th><th>Description</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for payment in payments %}
+          <tr>
+            <td>{{ payment.public_id }}</td>
+            <td>{{ payment.description }}</td>
+            <td>${{ '%.2f'|format(payment.amount) }}</td>
+            <td><span class="badge {{ 'text-bg-success' if payment.status == 'paid' else 'text-bg-warning' }}">{{ payment.status }}</span></td>
+            <td><a href="{{ url_for('billing.payment_detail', payment_id=payment.id) }}" class="btn btn-sm btn-outline-light">View</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}<p class="text-secondary mb-0">No payment requests yet.</p>{% endif %}
+</div>
+{% endblock %}

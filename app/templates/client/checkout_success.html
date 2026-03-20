@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Payment Successful | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="card-glass p-5 text-center">
+  <h1 class="mb-3">Payment received</h1>
+  <p class="text-secondary">{% if payment %}Payment {{ payment.public_id }} has been marked paid.{% else %}Your payment has been received and the portal will update shortly.{% endif %}</p>
+  <a class="btn btn-neon" href="{{ url_for('client.dashboard') }}">Return to dashboard</a>
+</div>
+{% endblock %}

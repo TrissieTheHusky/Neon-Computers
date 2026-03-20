@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Create Account | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="mx-auto auth-card card-glass p-4 p-lg-5">
+  <h1 class="h3 mb-3">Create your client account</h1>
+  <p class="text-secondary">Track repair jobs, view payment requests, and get support through the portal.</p>
+  <form method="post" class="row g-3">
+    <div class="col-12"><label class="form-label">Full name</label><input type="text" name="full_name" class="form-control" required></div>
+    <div class="col-md-6"><label class="form-label">Email</label><input type="email" name="email" class="form-control" required></div>
+    <div class="col-md-6"><label class="form-label">Phone</label><input type="text" name="phone" class="form-control"></div>
+    <div class="col-md-6"><label class="form-label">Password</label><input type="password" name="password" class="form-control" required></div>
+    <div class="col-md-6"><label class="form-label">Confirm password</label><input type="password" name="confirm_password" class="form-control" required></div>
+    <div class="col-12"><button class="btn btn-neon w-100">Create account</button></div>
+  </form>
+</div>
+{% endblock %}

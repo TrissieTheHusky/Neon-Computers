@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Policies | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="page-head mb-4"><h1>Policies</h1><p class="text-secondary mb-0">Starter business policies for a small repair and upgrade shop. Review with local counsel before production use.</p></div>
+<div class="row g-4">
+  <div class="col-lg-6"><div class="feature-card h-100"><h3>Service terms</h3><p>By submitting service you authorize diagnosis, repair, upgrade, and testing of the listed equipment. Estimates can change if hidden faults, damaged parts, or compatibility issues are discovered after intake.</p></div></div>
+  <div class="col-lg-6"><div class="feature-card h-100"><h3>Payment policy</h3><p>Diagnostics, deposits, special-order parts, and hourly support may be charged before final delivery. Unpaid balances can pause work or release.</p></div></div>
+  <div class="col-lg-6"><div class="feature-card h-100"><h3>Refunds & cancellations</h3><p>Completed labor, diagnostics, consumed billable support time, and non-returnable parts are generally non-refundable. Cancellation after ordering parts can still leave the client responsible for non-returnable items and restocking fees.</p></div></div>
+  <div class="col-lg-6"><div class="feature-card h-100"><h3>Data & backups</h3><p>Clients are responsible for maintaining backups. Reasonable care is used, but the business is not responsible for pre-existing instability, latent drive failure, malware, corruption, or manufacturer defects.</p></div></div>
+  <div class="col-lg-6"><div class="feature-card h-100"><h3>Support billing</h3><p>{{ settings.support_billing_note }}</p></div></div>
+  <div class="col-lg-6"><div class="feature-card h-100"><h3>Warranty note</h3><p>{{ settings.warranty_note }}</p></div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="page-head mb-4"><h1>Admin dashboard</h1><p class="text-secondary mb-0">Manage orders, tickets, rates, and payment requests.</p></div>
+<div class="row g-4">
+  <div class="col-12">
+    <div class="card-glass p-4">
+      <h2 class="h5 mb-3">Pricing settings</h2>
+      <form method="post" action="{{ url_for('admin.update_settings') }}" class="row g-3">
+        {% for field, label in [('support_hourly_rate','Support/hr'),('remote_support_hourly_rate','Remote/hr'),('emergency_support_hourly_rate','Emergency/hr'),('diagnostic_fee','Diagnostic fee'),('pc_build_labor','Build labor'),('hardware_install_labor','Hardware install'),('os_install_labor','OS install'),('data_transfer_labor','Data transfer'),('consultation_rate','Consultation'),('rush_multiplier','Rush multiplier'),('target_margin_percent','Target margin %'),('intake_deposit','Intake deposit'),('custom_build_deposit_percent','Build deposit %')] %}
+          <div class="col-md-3"><label class="form-label">{{ label }}</label><input type="number" step="0.01" name="{{ field }}" class="form-control" value="{{ settings|attr(field) }}"></div>
+        {% endfor %}
+        <div class="col-md-3"><label class="form-label">Payment terms days</label><input type="number" name="payment_terms_days" class="form-control" value="{{ settings.payment_terms_days }}"></div>
+        <div class="col-md-4"><label class="form-label">Sales tax note</label><input type="text" name="sales_tax_note" class="form-control" value="{{ settings.sales_tax_note }}"></div>
+        <div class="col-md-4"><label class="form-label">Support billing note</label><input type="text" name="support_billing_note" class="form-control" value="{{ settings.support_billing_note }}"></div>
+        <div class="col-md-4"><label class="form-label">Warranty note</label><input type="text" name="warranty_note" class="form-control" value="{{ settings.warranty_note }}"></div>
+        <div class="col-12"><button class="btn btn-neon">Save settings</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card-glass p-4">
+      <h2 class="h5 mb-3">Orders</h2>
+      {% for order in orders %}
+        <form method="post" action="{{ url_for('admin.update_order', order_id=order.id) }}" class="border rounded-4 p-3 mb-3 border-secondary-subtle">
+          <div class="row g-3">
+            <div class="col-md-3"><strong>{{ order.public_id }}</strong><div class="text-secondary small">{{ order.client.full_name }} • {{ order.title }}</div></div>
+            <div class="col-md-2"><select name="status" class="form-select"><option {% if order.status=='Received' %}selected{% endif %}>Received</option><option {% if order.status=='Diagnosing' %}selected{% endif %}>Diagnosing</option><option {% if order.status=='Waiting on Approval' %}selected{% endif %}>Waiting on Approval</option><option {% if order.status=='In Progress' %}selected{% endif %}>In Progress</option><option {% if order.status=='Ready for Pickup' %}selected{% endif %}>Ready for Pickup</option><option {% if order.status=='Completed' %}selected{% endif %}>Completed</option></select></div>
+            <div class="col-md-1"><input type="number" step="0.01" name="quoted_price" class="form-control" value="{{ order.quoted_price }}" placeholder="Quote"></div>
+            <div class="col-md-1"><input type="number" step="0.01" name="parts_cost" class="form-control" value="{{ order.parts_cost }}" placeholder="Parts"></div>
+            <div class="col-md-1"><input type="number" step="0.25" name="labor_hours" class="form-control" value="{{ order.labor_hours }}" placeholder="Hours"></div>
+            <div class="col-md-1"><input type="number" step="0.01" name="labor_rate" class="form-control" value="{{ order.effective_labor_rate }}" placeholder="Rate"></div>
+            <div class="col-md-1"><input type="number" step="0.01" name="deposit_required" class="form-control" value="{{ order.deposit_required }}" placeholder="Deposit"></div>
+            <div class="col-md-1"><input type="number" step="0.01" name="target_margin_percent" class="form-control" value="{{ order.target_margin_percent }}" placeholder="Margin"></div>
+            <div class="col-md-8"><input type="text" name="note" class="form-control" placeholder="Client-visible or internal update note"></div>
+            <div class="col-md-2 form-check mt-2 ms-2"><input class="form-check-input" type="checkbox" name="visible_to_client" checked><label class="form-check-label">Visible to client</label></div>
+            <div class="col-md-2 d-flex gap-2"><button class="btn btn-neon">Update</button><button formaction="{{ url_for('admin.create_order_payment', order_id=order.id) }}" name="amount" value="{{ order.deposit_required or order.balance_due or order.recommended_quote }}" class="btn btn-outline-light">Request payment</button></div>
+          </div>
+          <div class="small text-secondary mt-2">Break-even: ${{ '%.2f'|format(order.estimated_break_even) }} • Recommended: ${{ '%.2f'|format(order.recommended_quote) }} • Balance due: ${{ '%.2f'|format(order.balance_due) }}</div>
+        </form>
+      {% else %}<p class="text-secondary mb-0">No orders yet.</p>{% endfor %}
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card-glass p-4">
+      <h2 class="h5 mb-3">Tickets</h2>
+      {% for ticket in tickets %}
+        <form method="post" action="{{ url_for('admin.message_ticket', ticket_id=ticket.id) }}" class="border rounded-4 p-3 mb-3 border-secondary-subtle">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-3"><strong>{{ ticket.public_id }}</strong><div class="text-secondary small">{{ ticket.client.full_name }} • {{ ticket.subject }}</div></div>
+            <div class="col-md-2"><select name="status" class="form-select"><option {% if ticket.status=='Open' %}selected{% endif %}>Open</option><option {% if ticket.status=='Waiting on Client' %}selected{% endif %}>Waiting on Client</option><option {% if ticket.status=='In Progress' %}selected{% endif %}>In Progress</option><option {% if ticket.status=='Resolved' %}selected{% endif %}>Resolved</option><option {% if ticket.status=='Closed' %}selected{% endif %}>Closed</option></select></div>
+            <div class="col-md-5"><input type="text" name="body" class="form-control" placeholder="Reply to client"></div>
+            <div class="col-md-2 d-flex gap-2"><button class="btn btn-neon">Send</button><a href="{{ url_for('client.ticket_detail', ticket_id=ticket.id) }}" class="btn btn-outline-light">Open</a></div>
+          </div>
+          <div class="small text-secondary mt-2">Rate: ${{ '%.2f'|format(ticket.hourly_rate) }}/hr • Billable: ${{ '%.2f'|format(ticket.billable_total) }} • Due: ${{ '%.2f'|format(ticket.balance_due) }}</div>
+        </form>
+      {% else %}<p class="text-secondary mb-0">No tickets yet.</p>{% endfor %}
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card-glass p-4">
+      <h2 class="h5 mb-3">Payments</h2>
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless align-middle">
+          <thead><tr><th>ID</th><th>Client</th><th>Description</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            {% for payment in payments %}
+              <tr>
+                <td>{{ payment.public_id }}</td>
+                <td>{{ payment.user.full_name }}</td>
+                <td>{{ payment.description }}</td>
+                <td>${{ '%.2f'|format(payment.amount) }}</td>
+                <td>{{ payment.status }}</td>
+                <td>{% if payment.status != 'paid' %}<form method="post" action="{{ url_for('admin.mark_payment_paid', payment_id=payment.id) }}"><button class="btn btn-sm btn-outline-light">Mark paid</button></form>{% endif %}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

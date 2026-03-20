@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Pricing | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="page-head mb-4"><h1>Pricing</h1><p class="text-secondary mb-0">Baseline rates you can adjust in admin as your costs change.</p></div>
+<div class="row g-4">
+  <div class="col-md-4"><div class="price-box"><h4>Diagnostic fee</h4><div class="price">${{ '%.2f'|format(settings.diagnostic_fee) }}</div><p>Bench diagnosis and issue triage.</p></div></div>
+  <div class="col-md-4"><div class="price-box"><h4>Remote support</h4><div class="price">${{ '%.2f'|format(settings.remote_support_hourly_rate) }}/hr</div><p>Software support, drivers, updates, setup, and troubleshooting.</p></div></div>
+  <div class="col-md-4"><div class="price-box"><h4>On-site / advanced support</h4><div class="price">${{ '%.2f'|format(settings.support_hourly_rate) }}/hr</div><p>Advanced work and in-person assistance.</p></div></div>
+  <div class="col-md-4"><div class="price-box"><h4>Emergency support</h4><div class="price">${{ '%.2f'|format(settings.emergency_support_hourly_rate) }}/hr</div><p>Priority same-day or urgent response work.</p></div></div>
+  <div class="col-md-4"><div class="price-box"><h4>Custom build labor</h4><div class="price">${{ '%.2f'|format(settings.pc_build_labor) }}</div><p>Assembly, setup, cable management, and burn-in testing.</p></div></div>
+  <div class="col-md-4"><div class="price-box"><h4>Hardware install labor</h4><div class="price">${{ '%.2f'|format(settings.hardware_install_labor) }}</div><p>Component installation labor.</p></div></div>
+  <div class="col-md-4"><div class="price-box"><h4>OS install</h4><div class="price">${{ '%.2f'|format(settings.os_install_labor) }}</div><p>Fresh OS install, updates, and drivers.</p></div></div>
+  <div class="col-md-4"><div class="price-box"><h4>Data transfer</h4><div class="price">${{ '%.2f'|format(settings.data_transfer_labor) }}</div><p>Basic backup and migration labor.</p></div></div>
+  <div class="col-md-4"><div class="price-box"><h4>Target margin</h4><div class="price">{{ settings.target_margin_percent|int }}%</div><p>Applied above break-even for healthier quoting.</p></div></div>
+</div>
+<div class="card-glass p-4 mt-4">
+  <h3>Break-even quoting</h3>
+  <p class="mb-2"><code>break_even = parts_cost + (labor_hours × labor_rate)</code></p>
+  <p class="mb-2"><code>recommended_quote = break_even × (1 + target_margin_percent / 100)</code></p>
+  <p class="text-secondary mb-0">This lets you see the minimum sustainable number before you send the client a quote.</p>
+</div>
+{% endblock %}

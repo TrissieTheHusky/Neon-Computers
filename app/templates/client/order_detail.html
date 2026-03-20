@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Order {{ order.public_id }} | Neon Roo Computers & Upgrades{% endblock %}
+{% block content %}
+<div class="page-head mb-4"><h1>Order {{ order.public_id }}</h1><p class="text-secondary mb-0">{{ order.title }}</p></div>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card-glass p-4 h-100">
+      <div class="mb-2"><strong>Status:</strong> {{ order.status }}</div>
+      <div class="mb-2"><strong>Service:</strong> {{ order.service_type }}</div>
+      <div class="mb-2"><strong>Priority:</strong> {{ order.priority }}</div>
+      <div class="mb-2"><strong>Quoted:</strong> ${{ '%.2f'|format(order.quoted_price or order.recommended_quote) }}</div>
+      <div class="mb-2"><strong>Break-even:</strong> ${{ '%.2f'|format(order.estimated_break_even) }}</div>
+      <div class="mb-2"><strong>Paid:</strong> ${{ '%.2f'|format(order.total_paid) }}</div>
+      <div class="mb-0"><strong>Balance due:</strong> ${{ '%.2f'|format(order.balance_due) }}</div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card-glass p-4 mb-4"><h3 class="h5">Description</h3><p class="mb-0">{{ order.description }}</p></div>
+    <div class="card-glass p-4">
+      <h3 class="h5 mb-3">Timeline</h3>
+      {% for update in order.updates if update.visible_to_client or current_user.is_admin %}
+        <div class="timeline-item"><div class="small text-secondary">{{ update.created_at.strftime('%Y-%m-%d %I:%M %p') }}</div><div>{{ update.note }}</div></div>
+      {% else %}<p class="text-secondary mb-0">No updates yet.</p>{% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
